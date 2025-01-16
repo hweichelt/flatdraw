@@ -1,0 +1,86 @@
+body {
+    color: #222;
+    background: #fff;
+    font: 100% system-ui;
+    padding: 0;
+    margin: 0;
+}
+h1{
+    padding: 1rem;
+    font-size: 2rem;
+    line-height: 2rem;
+    margin: 0;
+    border-bottom: solid 1px rgba(255,255,255,0.2);
+}
+.page{
+    display: grid;
+    grid-template-columns: auto 1fr;
+}
+main{
+    width: 100%;
+    height: calc(100vh - (4 * 1rem + 1px));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+aside{
+    min-width: 12rem;
+    border-right: solid 1px rgba(255,255,255,0.2);
+}
+
+.palette{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 1rem;
+    gap: 0.5rem;
+    border-bottom: solid 1px rgba(255,255,255,0.2);
+}
+
+.palette:last-child{
+    border-bottom: none;
+}
+
+
+
+.palette .track {
+    position: relative;
+    background: rgba(255,255,255,0.05);
+    cursor: pointer;
+    color: #FFF;
+    font-size: 1rem;
+    padding: 1rem;
+    aspect-ratio: 1;
+    border: solid 1px rgba(255,255,255,0.2);
+    border-radius: 0.25rem;
+}
+
+.palette .track > div{
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-size: 100% 100%;
+}
+
+
+
+.palette .track.selected {
+    background: #09c4;
+    border-color: #09c;
+}
+
+
+@media (prefers-color-scheme: dark) {
+  body {
+    color: #eee;
+    background: #121212;
+  }
+
+  body a {
+    color: #809fff;
+  }
+  .t-sprite{
+      filter: invert(38%) sepia(98%) saturate(2054%) hue-rotate(168deg) brightness(96%) contrast(103%);
+  }
+}

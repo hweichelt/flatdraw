@@ -1,0 +1,63 @@
+.map{
+    width: 1000px;
+    height: 600px;
+    background: #222222;
+    border: solid 1px rgba(255,255,255,0.2);
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+}
+.map > div{
+    border: solid 1px rgba(255,255,255,0.2);
+    transition-property: border;
+    transition-duration: 200ms;
+}
+.map > div:hover{
+    border-color: #AAA;
+}
+.map button{
+    border: none;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    cursor: pointer;
+    color: #FFF;
+    font-size: 1rem;
+    background-size: 100% 100%;
+}
+
+
+.t-0,
+button.t-0{
+    background: transparent;
+}
+
+.t-32800,
+button.t-32800 {
+    background-image: url("../sprites/32800.svg");
+}
+
+.t-1025,
+button.t-1025 {
+    background-image: url("../sprites/1025.svg");
+}
+
+.t-4608,
+button.t-4608 {
+    background-image: url("../sprites/4608.svg");
+}
+
+.t-16386,
+button.t-16386 {
+    background-image: url("../sprites/16386.svg");
+}
+
+.t-72,
+button.t-72 {
+    background-image: url("../sprites/72.svg");
+}
+
+.t-2064,
+button.t-2064 {
+    background-image: url("../sprites/2064.svg");
+}
