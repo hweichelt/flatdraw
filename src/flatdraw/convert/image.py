@@ -30,10 +30,10 @@ class ImageInterpreter:
         return self.image_path.stem
 
     def _convert_image(self) -> npt.ArrayLike:
-        layer_r = np.zeros((self.image.width, self.image_height)).astype(np.uint16)
-        layer_b = np.zeros((self.image.width, self.image_height)).astype(np.uint16)
+        layer_r = np.zeros((self.image_height, self.image_width)).astype(np.uint16)
+        layer_b = np.zeros((self.image_height, self.image_width)).astype(np.uint16)
 
-        for x in range(self.image.width):
+        for x in range(self.image_width):
             for y in range(self.image_height):
                 r, g, b, _ = self.image.getpixel((x, y))
                 layer_r[y, x] = r
