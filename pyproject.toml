@@ -1,0 +1,42 @@
+[build-system]
+requires = [
+    "setuptools",
+    "setuptools-scm",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "flatdraw"
+authors = [
+    { name = "Hannes Weichelt", email = "main@hweichelt.de" },
+]
+description = "Draw your flatland environments"
+requires-python = ">=3.12"
+license = {file = "LICENSE"}
+dynamic = [ "version" ]
+readme = "README.md"
+dependencies = [
+    "clingo>=5.7.1",
+]
+
+
+[project.urls]
+Homepage = "https://github.com/hweichelt/flatdraw.git"
+
+[project.optional-dependencies]
+format = [ "black", "isort", "autoflake" ]
+lint_pylint = [ "pylint" ]
+typecheck = [ "types-setuptools", "mypy" ]
+test = [ "coverage[toml]" ]
+doc = [ "sphinx", "furo", "nbsphinx", "sphinx_copybutton", "myst-parser" ]
+dev = [ "readmd[test,typecheck,lint_pylint]" ]
+
+[project.scripts]
+flatdraw = "flatdraw.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools_scm]
+version_scheme = "python-simplified-semver"
+local_scheme = "no-local-version"
