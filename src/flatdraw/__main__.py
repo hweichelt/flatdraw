@@ -12,7 +12,7 @@ def main():
     print(Track(1025).to_color().to_hex())
     print(Track(38505).to_color().to_hex())
 
-    ii = ImageInterpreter("test.png")
+    ii = ImageInterpreter("examples/crossing/test.png")
     print(ii.convert())
 
 

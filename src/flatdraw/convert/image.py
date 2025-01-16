@@ -17,11 +17,17 @@ class ImageInterpreter:
         cell_predicate_name: str = DEFAULT_CELL_PREDICATE_NAME,
     ):
         self.image_path = Path(image_path)
+        self.file_name = self._get_image_file_name()
         self.image = Image.open(image_path)
         self.image_width = self.image.width
         self.image_height = self.image.height
 
         self.cell_predicate_name = cell_predicate_name
+
+    def _get_image_file_name(self) -> str:
+        if not self.image_path.is_file():
+            raise FileNotFoundError(f"Image file not found: {self.image_path}")
+        return self.image_path.stem
 
     def _convert_image(self) -> npt.ArrayLike:
         layer_r = np.zeros((self.image.width, self.image_height)).astype(np.uint16)
@@ -45,7 +51,7 @@ class ImageInterpreter:
                 atoms.append(f"{self.cell_predicate_name}({x},{y},{track_type})")
         return atoms
 
-    def convert(self) -> str:
+    def convert(self) -> None:
         out = ""
         atoms = self._to_clingo_representation()
         for y in range(self.image_height):
@@ -53,4 +59,5 @@ class ImageInterpreter:
                 ". ".join(atoms[y * self.image_width : (y + 1) * self.image_width])
                 + ".\n"
             )
-        return out
+        with open(self.image_path.parent.joinpath(f"{self.file_name}.lp"), "w") as file:
+            file.write(out)
