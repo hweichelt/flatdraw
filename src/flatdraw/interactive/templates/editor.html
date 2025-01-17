@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="page">
+        <aside>
+            <div class="palette">
+                <div class="track">
+                    <input type="hidden" value="0">
+                    <div class="t-0 t-sprite"></div>
+                </div>
+            </div>
+            <div class="palette">
+                <div class="track">
+                    <input type="hidden" value="32800">
+                    <div class="t-32800 t-sprite"></div>
+                </div>
+                <div class="track">
+                    <input type="hidden" value="1025">
+                    <div class="t-1025 t-sprite"></div>
+                </div>
+            </div>
+            <div class="palette">
+                <div class="track">
+                    <input type="hidden" value="16386">
+                    <div class="t-16386 t-sprite"></div>
+                </div>
+                <div class="track">
+                    <input type="hidden" value="4608">
+                    <div class="t-4608 t-sprite"></div>
+                </div>
+                <div class="track">
+                    <input type="hidden" value="72">
+                    <div class="t-72 t-sprite"></div>
+                </div>
+                <div class="track">
+                    <input type="hidden" value="2064">
+                    <div class="t-2064 t-sprite"></div>
+                </div>
+            </div>
+        </aside>
+        <main>
+            <div class="map">
+                {% for _ in range(60) %}
+                    <div class="node-wrapper">
+                        <button class="node"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        </main>
+    </div>
+    <script type="module" src="{{ url_for("static", filename="scripts/main.js") }}"></script>
+{% endblock %}

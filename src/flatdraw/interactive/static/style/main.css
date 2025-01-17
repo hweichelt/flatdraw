@@ -70,6 +70,18 @@ aside{
     border-color: #09c;
 }
 
+.dialog{
+    border: solid 1px #aaa;
+    padding: 1rem;
+    border-radius: 0.25rem;
+}
+
+.flex-vertical{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
 
 @media (prefers-color-scheme: dark) {
   body {

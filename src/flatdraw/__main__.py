@@ -51,7 +51,7 @@ def main():
         t = Track(args.track)
         print(t.to_color().to_hex())
     elif args.subparser == "interactive":
-        app.run()
+        app.run(debug=True)
     else:
         print(FLATDRAW_FONTART)
         parser.print_help()
