@@ -17,11 +17,12 @@ h1{
     grid-template-columns: auto 1fr;
 }
 main{
+    position: relative;
     width: 100%;
     height: calc(100vh - (4 * 1rem + 1px));
-    display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
 }
 aside{
     min-width: 12rem;

@@ -44,4 +44,4 @@ def editor():
             file.save(str(os.path.join(app.config["UPLOAD_FOLDER"], filename)))
             return redirect(url_for("download_file", name=filename))
 
-    return render_template("editor.html")
+    return render_template("editor.html", width=40, height=20)
