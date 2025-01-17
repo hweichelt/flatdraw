@@ -7,7 +7,6 @@ let brush_button = undefined;
 const map = new Map();
 const map_x = 10;
 
-
 buttons_track.forEach((button, i) => {
     button.addEventListener("click", event => {
         event.preventDefault();

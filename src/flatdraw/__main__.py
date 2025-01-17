@@ -1,7 +1,9 @@
 import argparse
+from http.server import HTTPServer, SimpleHTTPRequestHandler
 
 from .convert.image import ImageInterpreter
 from .convert import Track
+from .interactive.main import app
 
 
 FLATDRAW_FONTART = """
@@ -37,6 +39,9 @@ def main():
         type=int,
         help="Track type identifier of the flatland track to be converted",
     )
+    interactive_parser = subparsers.add_parser(
+        "interactive", help="Run an interactive session"
+    )
     args = parser.parse_args()
 
     if args.subparser == "convert":
@@ -45,6 +50,8 @@ def main():
     elif args.subparser == "color":
         t = Track(args.track)
         print(t.to_color().to_hex())
+    elif args.subparser == "interactive":
+        app.run()
     else:
         print(FLATDRAW_FONTART)
         parser.print_help()
