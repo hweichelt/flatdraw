@@ -3,7 +3,7 @@
 {% block content %}
     <main>
         <div class="flex-vertical">
-            <form class="dialog" id="file-form" action="{{ url_for("editor") }}" method="GET">
+            <form class="dialog" id="file-form" action="{{ url_for("editor") }}" method="GET" enctype=multipart/form-data>
                 <input type="file" id="file" name="file" dirname=".">
             </form>
             <form class="dialog">
