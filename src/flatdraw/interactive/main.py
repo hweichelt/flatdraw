@@ -12,6 +12,13 @@ from werkzeug.utils import secure_filename
 
 UPLOAD_FOLDER = "/media/"
 ALLOWED_EXTENSIONS = {"png", "lp"}
+TRACK_TYPES = [
+    {0},
+    {32800, 1025},
+    {4608, 16386, 72, 2064},
+    {37408, 17411, 32872, 3089, 49186, 1097, 34864, 5633},
+    {20994, 16458, 2136, 6672},
+]
 
 app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
@@ -44,4 +51,4 @@ def editor():
             file.save(str(os.path.join(app.config["UPLOAD_FOLDER"], filename)))
             return redirect(url_for("download_file", name=filename))
 
-    return render_template("editor.html", width=40, height=20)
+    return render_template("editor.html", width=40, height=20, track_types=TRACK_TYPES)
