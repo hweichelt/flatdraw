@@ -33,10 +33,23 @@ document.querySelectorAll("input[type=hidden].loaded").forEach(node => {
 document.addEventListener('keydown', event => {
     if (event.ctrlKey && event.key === 's') {
         event.preventDefault();
-        button_save.click();
+        if(button_save.disabled){
+            form_save.querySelector("input[type=text]").focus();
+        } else{
+            button_save.click();
+        }
     }
 });
 
+document.getElementById("output-button").addEventListener("click", event => {
+    open_output_dir();
+});
+form_save.addEventListener("change", event => {
+    update_save_button();
+})
+form_save.querySelector("input[type=text]").addEventListener("input", event => {
+    update_save_button();
+});
 form_save.addEventListener("submit", event => {
     event.preventDefault();
     save_map();
@@ -157,6 +170,13 @@ function get_position_from_node_id(node_id) {
     return [x, y]
 }
 
+function update_save_button() {
+    const filename = form_save.querySelector("input[type=text]").value;
+    const export_lp = form_save.querySelector("input[name=export-lp]").checked;
+    const export_png = form_save.querySelector("input[name=export-png]").checked;
+    button_save.disabled = !(filename.length > 0 && (export_lp || export_png));
+}
+
 function save_map(){
     document.body.classList.add("saving");
 
@@ -181,4 +201,8 @@ function save_map(){
             () => {document.body.classList.remove("saving")}
         )
     )
+}
+
+function open_output_dir() {
+    fetch("/editor/open_output_dir").then();
 }

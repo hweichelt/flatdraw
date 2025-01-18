@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Flatdraw</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='flatdraw_logo.svg') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style/main.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style/map.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style/spinners.css') }}">
@@ -22,7 +23,7 @@
         <div class="title">Flatdraw</div>
         <nav>
             {% if not hide_nav %}
-                <a href="{{ url_for('index') }}">{{ icons.arrow_left }}</a>
+                <a class="button subtle icon tooltip" href="{{ url_for('index') }}" style="--tooltip-text: 'Exit Map Editor'; --tooltip-width: 9.5rem;">{{ icons.arrow_left }}</a>
             {% endif %}
         </nav>
         <div id="actions">

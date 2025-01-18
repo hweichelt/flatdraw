@@ -40,12 +40,13 @@
 
 {% block actions %}
     <form id="save-form">
+        <button type="button" id="output-button" class="button subtle icon tooltip" style="--tooltip-text: 'Open Output Folder';--tooltip-width: 10rem;">{{ icons.folder }}</button>
         <input type="text" name="filename" pattern="[A-Za-z0-9]+" placeholder="output filename" required>
         <input id="export-lp" name="export-lp" type="checkbox">
         <label for="export-lp" class="checkbox">.lp</label>
         <input id="export-png" name="export-png" type="checkbox" checked>
         <label for="export-png" class="checkbox">.png</label>
-        <button type="submit" id="save-button" class="button">
+        <button type="submit" id="save-button" class="button" disabled>
             Save
             <span class="shortcut">
                 <span class="key">ctrl</span>

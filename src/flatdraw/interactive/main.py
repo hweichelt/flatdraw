@@ -1,4 +1,5 @@
 import os
+import subprocess
 import tempfile
 from pathlib import Path
 from typing import Dict, Tuple
@@ -29,7 +30,7 @@ TRACK_TYPES = [
     {20994, 16458, 2136, 6672},
     {33825, 38433, 50211, 33897, 35889, 38505, 52275},
 ]
-ICONS = {"home", "arrow_left"}
+ICONS = {"home", "arrow_left", "folder"}
 
 app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
@@ -140,4 +141,11 @@ def editor_save():
         temp_file_lp.close()
         os.unlink(temp_file_lp.name)
 
+    return ""
+
+
+@app.route("/editor/open_output_dir/")
+def editor_open_output_dir():
+    print("TEST")
+    subprocess.Popen(["xdg-open", Path.home() / "Downloads" / "Flatdraw"])
     return ""
