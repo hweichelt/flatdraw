@@ -1,4 +1,5 @@
 .loader {
+    scale: 0.8;
     width: 100px;
     height: 100px;
     background: linear-gradient(

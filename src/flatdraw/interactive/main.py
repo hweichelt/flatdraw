@@ -1,19 +1,14 @@
-import logging
 import os
-import sys
-import time
 from pathlib import Path
 from typing import Dict, Tuple
 
 import numpy as np
-from PIL import Image
 from flask import (
     Flask,
     render_template,
     request,
     flash,
     redirect,
-    url_for,
 )
 from markupsafe import Markup
 from werkzeug.utils import secure_filename
@@ -33,9 +28,7 @@ TRACK_TYPES = [
     {20994, 16458, 2136, 6672},
     {33825, 38433, 50211, 33897, 35889, 38505, 52275},
 ]
-ICONS = {
-    "home",
-}
+ICONS = {"home", "arrow_left"}
 
 app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
@@ -62,7 +55,7 @@ def parse_position(position_string: str) -> Tuple[int, int]:
 
 @app.route("/")
 def index():
-    return render_template("index.html", icons=icons())
+    return render_template("index.html", icons=icons(), hide_nav=True)
 
 
 @app.post("/editor/")
