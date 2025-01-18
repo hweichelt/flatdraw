@@ -11,10 +11,10 @@
                 <button type="button" class="button" onclick="document.getElementById('file').click();">Open File</button>
                 <input type="file" id="file" name="file" dirname="." accept=".png,.lp">
             </form>
-            <form class="dialog">
+            <form class="dialog" action="{{ url_for("editor") }}" method="POST">
                 <div class="split">
-                    <input id="width" name="width" type="number" min="0" max="500" placeholder="width">
-                    <input id="height" name="height" type="number" min="0" max="500" placeholder="height">
+                    <input id="width" name="new_width" type="number" min="0" max="200" placeholder="width" required>
+                    <input id="height" name="new_height" type="number" min="0" max="200" placeholder="height" required>
                 </div>
                 <button class="button" type="submit" name="new">New</button>
             </form>

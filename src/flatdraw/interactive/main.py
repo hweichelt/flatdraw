@@ -67,11 +67,7 @@ def index():
 
 @app.post("/editor/")
 def editor():
-    if request.method == "POST":
-        # check if the post request has the file part
-        if "file" not in request.files:
-            flash("No file part")
-            return redirect(request.url)
+    if "file" in request.files:
         file = request.files["file"]
         # If the user does not select a file, the browser submits an
         # empty file without a filename.
@@ -101,6 +97,15 @@ def editor():
                 track_types=TRACK_TYPES,
                 icons=icons(),
             )
+    else:
+        return render_template(
+            "editor.html",
+            width=int(request.form.get("new_width")),
+            height=int(request.form.get("new_height")),
+            nodes={},
+            track_types=TRACK_TYPES,
+            icons=icons(),
+        )
 
 
 @app.post("/editor/save/")
