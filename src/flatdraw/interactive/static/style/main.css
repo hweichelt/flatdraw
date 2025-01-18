@@ -1,5 +1,8 @@
 html{
     --background: #121212;
+    --surface: #242424;
+    --border-surface: #363636;
+    --primary: #1976D2;
 }
 
 body {
@@ -157,28 +160,49 @@ aside{
     border-color: #09c;
 }
 
-.dialog{
-    border: solid 1px #aaa;
-    padding: 1rem;
-    border-radius: 0.25rem;
-}
-
-.flex-vertical{
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
 button.button{
     cursor: pointer;
     padding: 0.3rem 1rem;
-    background: #09c;
+    background: var(--primary);
     color: #fff;
     font-size: 1rem;
     font-weight: bolder;
     border: solid 3px rgba(255,255,255,0.25);
     border-radius: 0.5rem;
+    transition-property: background-color;
+    transition-duration: 200ms;
 }
+
+button.button:hover{
+    background: color-mix(in srgb, var(--primary) 90%, var(--background));
+}
+
+input[type=number]{
+    -moz-appearance: textfield;
+    background: rgba(255,255,255,0.1);
+    border: solid 3px rgba(255,255,255,0.2);
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    line-height: 1rem;
+    padding: 1rem;
+    color: #fff;
+    font-family: "JetBrains Mono", monospace;
+    font-weight: bolder;
+}
+
+input[type=number]:focus{
+    border-color: var(--primary);
+}
+
+*:focus {
+    outline:solid 2px rgba(255,255,255,0.8);
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 
 @media (prefers-color-scheme: dark) {
   body {

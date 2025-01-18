@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style/main.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style/map.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style/spinners.css') }}">
+    {% block stylesheets %}{% endblock %}
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

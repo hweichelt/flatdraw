@@ -39,6 +39,7 @@ ICONS = {
 
 app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+app.secret_key = "5765702627309843646"
 
 
 def allowed_file(filename):
