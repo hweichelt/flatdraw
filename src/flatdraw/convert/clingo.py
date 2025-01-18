@@ -59,8 +59,7 @@ class ClingoInterpreter:
         color_value = color
         return color_value
 
-    def convert(self):
-        # img = Image.new("RGBA", (self._width, self._height), (0, 0, 0, 0))
+    def convert(self) -> Image:
         if self._map_data is None:
             raise ValueError("Map is not parsed")
         transformed = np.zeros((self._width, self._height), dtype=np.uint32)
@@ -69,4 +68,4 @@ class ClingoInterpreter:
                 transformed[y, x] = ClingoInterpreter.convert_track(
                     self._map_data[y][x]
                 )
-        Image.fromarray(transformed, mode="RGBA").save("output.png", "PNG")
+        return Image.fromarray(transformed, mode="RGBA")

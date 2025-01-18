@@ -23,6 +23,8 @@ let dragging = false;
 let drag_origin_x = 0;
 let drag_origin_y = 0;
 
+const form_save = document.getElementById("save-form");
+
 
 document.querySelectorAll("input[type=hidden].loaded").forEach(node => {
     map.set(Number.parseInt(node.name), node.value)
@@ -31,10 +33,11 @@ document.querySelectorAll("input[type=hidden].loaded").forEach(node => {
 document.addEventListener('keydown', event => {
     if (event.ctrlKey && event.key === 's') {
         event.preventDefault();
-        save_map();
+        button_save.click();
     }
 });
-button_save.addEventListener("click", event => {
+
+form_save.addEventListener("submit", event => {
     event.preventDefault();
     save_map();
 });
@@ -164,7 +167,11 @@ function save_map(){
         const [x, y] = get_position_from_node_id(track[0]);
         data.append(`${x}-${y}`, track[1]);
     });
-    console.log(data);
+    data.append("filename", form_save.querySelector("input[name=filename]").value);
+    data.append("export-lp", `${+ form_save.querySelector("input[name=export-lp]").checked}`);
+    data.append("export-png", `${+ form_save.querySelector("input[name=export-png]").checked}`);
+    data.append("width", map_x.toString());
+    data.append("height", map_y.toString());
     fetch("/editor/save", {
         "method": "POST",
         "body": data,

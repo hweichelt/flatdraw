@@ -103,6 +103,14 @@ header #actions{
     align-items: center;
 }
 
+header #actions form{
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+}
+
 
 .page{
     display: grid;
@@ -173,7 +181,7 @@ aside{
 
 button.button{
     cursor: pointer;
-    padding: 0.3rem 1rem;
+    padding: 0.5rem 1rem;
     background: var(--primary);
     color: #fff;
     font-size: 1rem;
@@ -188,6 +196,7 @@ button.button:hover{
     background: color-mix(in srgb, var(--primary) 90%, var(--background));
 }
 
+input[type=text],
 input[type=number]{
     -moz-appearance: textfield;
     background: rgba(255,255,255,0.1);
@@ -195,18 +204,40 @@ input[type=number]{
     border-radius: 0.5rem;
     font-size: 1rem;
     line-height: 1rem;
-    padding: 1rem;
+    padding: 0.5rem 1rem;
     color: #fff;
     font-family: "JetBrains Mono", monospace;
-    font-weight: bolder;
+    font-weight: normal;
 }
 
+input[type=text]:focus,
 input[type=number]:focus{
     border-color: var(--primary);
 }
 
+label.checkbox{
+    cursor: pointer;
+    padding: 0.5rem 0.6rem;
+    border: solid 3px rgba(255,255,255,0.1);
+    border-radius: 0.5rem;
+    transition-property: border-color, background-color;
+    transition-duration: 200ms;
+}
+label.checkbox:hover{
+    border-color: rgba(255,255,255,0.3);
+}
+input[type=checkbox]:checked + label.checkbox{
+    border-color: var(--primary);
+    background: color-mix(in srgb, var(--primary) 20%, transparent);
+}
+
+
+
 *:focus {
     outline:solid 2px rgba(255,255,255,0.8);
+}
+input[type=checkbox]{
+    display: none;
 }
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {

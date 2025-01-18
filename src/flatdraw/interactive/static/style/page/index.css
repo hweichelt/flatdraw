@@ -43,6 +43,11 @@ form button.button {
     padding: 1rem;
 }
 
+form input[type=number]{
+    padding: 1rem;
+    font-weight: bolder;
+}
+
 .grad{
     position: absolute;
     top: 50%;

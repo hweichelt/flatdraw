@@ -1,4 +1,5 @@
 import os
+import tempfile
 from pathlib import Path
 from typing import Dict, Tuple
 
@@ -103,16 +104,40 @@ def editor():
 
 @app.post("/editor/save/")
 def editor_save():
-    output_map = np.zeros((100, 100), dtype=np.uint16)
     print("Saving Map")
-    for position_string, track in request.values.dicts[1].items():
-        x, y = parse_position(position_string)
-        output_map[y][x] = int(track)
+    height = int(request.form.get("height"))
+    width = int(request.form.get("width"))
+    export_lp = bool(int(request.form.get("export-lp")))
+    export_png = bool(int(request.form.get("export-png")))
+    filename = request.form.get("filename")
+    output_map = np.zeros((width, height), dtype=np.uint16)
+    for key, value in request.form.items():
+        if key in ["filename", "width", "height", "export-lp", "export-png"]:
+            continue
+        x, y = parse_position(key)
+        output_map[y][x] = int(value)
 
     facts = ClingoInterpreter.nd_array_to_facts(output_map)
-    with open("output.lp", "w") as file:
-        file.write(" ".join([f"{f}." for f in facts]))
-    ci = ClingoInterpreter("output.lp")
-    ci.convert()
+
+    downloads_path = Path.home() / "Downloads" / "Flatdraw"
+    downloads_path.mkdir(parents=True, exist_ok=True)
+    temp_file_lp = None
+    if export_lp:
+        filename_lp = downloads_path / f"{filename}.lp"
+    else:
+        temp_file_lp = tempfile.NamedTemporaryFile(delete=False)
+        filename_lp = temp_file_lp.name
+
+    with open(filename_lp, "w") as file:
+        file.write(" ".join([f"{f}." for f in sorted(facts)]))
+    ci = ClingoInterpreter(filename_lp)
+    image = ci.convert()
+    filename_png = downloads_path / f"{filename}.png"
+    if export_png:
+        image.save(filename_png, "PNG")
+
+    if temp_file_lp is not None:
+        temp_file_lp.close()
+        os.unlink(temp_file_lp.name)
 
     return ""

@@ -39,5 +39,12 @@
 {% endblock %}
 
 {% block actions %}
-    <button id="save-button" class="button">Save</button>
+    <form id="save-form">
+        <input type="text" name="filename" pattern="[A-Za-z0-9]+" placeholder="output filename" required>
+        <input id="export-lp" name="export-lp" type="checkbox">
+        <label for="export-lp" class="checkbox">.lp</label>
+        <input id="export-png" name="export-png" type="checkbox" checked>
+        <label for="export-png" class="checkbox">.png</label>
+        <button type="submit" id="save-button" class="button">Save</button>
+    </form>
 {% endblock %}
