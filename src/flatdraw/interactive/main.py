@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Dict, Tuple
 
 import numpy as np
+from PIL import Image
 from flask import (
     Flask,
     render_template,
@@ -18,8 +19,11 @@ from markupsafe import Markup
 from werkzeug.utils import secure_filename
 
 from ..convert.clingo import ClingoInterpreter
+from ..convert.image import ImageInterpreter
 
-UPLOAD_FOLDER = "/media/"
+UPLOAD_FOLDER = Path.home().joinpath(".flatdraw/uploads/")
+UPLOAD_FOLDER.mkdir(parents=True, exist_ok=True)
+
 ALLOWED_EXTENSIONS = {"png", "lp"}
 TRACK_TYPES = [
     {0},
@@ -59,7 +63,7 @@ def index():
     return render_template("index.html", icons=icons())
 
 
-@app.route("/editor/")
+@app.post("/editor/")
 def editor():
     if request.method == "POST":
         # check if the post request has the file part
@@ -74,12 +78,27 @@ def editor():
             return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            file.save(str(os.path.join(app.config["UPLOAD_FOLDER"], filename)))
-            return redirect(url_for("download_file", name=filename))
+            uploaded_file_path = str(
+                os.path.join(app.config["UPLOAD_FOLDER"], filename)
+            )
+            file.save(uploaded_file_path)
 
-    return render_template(
-        "editor.html", width=100, height=100, track_types=TRACK_TYPES, icons=icons()
-    )
+            if uploaded_file_path.endswith(".png"):
+                ii = ImageInterpreter(uploaded_file_path)
+                loaded_map = ii.get_map()
+            elif uploaded_file_path.endswith(".lp"):
+                ci = ClingoInterpreter(uploaded_file_path)
+                loaded_map = ci.get_map()
+            else:
+                return "ERROR: Wrong file type"
+            return render_template(
+                "editor.html",
+                width=loaded_map.width,
+                height=loaded_map.height,
+                nodes=loaded_map.get_non_empty_nodes(),
+                track_types=TRACK_TYPES,
+                icons=icons(),
+            )
 
 
 @app.post("/editor/save/")

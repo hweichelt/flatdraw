@@ -19,8 +19,18 @@
             <div class="map">
             <input type="hidden" name="x" value="{{ width }}">
             <input type="hidden" name="y" value="{{ height }}">
-                {% for _ in range(width * height) %}
-                    <div class="node-wrapper"></div>
+                {% for y in range(height) %}
+                    {% for x in range(width) %}
+                        {% with node_id = x + y * width %}
+                        	{% if node_id in nodes %}
+                                <input type="hidden" class="loaded" name="{{ node_id }}" value="{{ nodes[node_id] }}">
+                                <div class="node-wrapper t-sprite t-{{ nodes[node_id] }}"></div>
+                            {% else %}
+                                <div class="node-wrapper"></div>
+                            {% endif %}
+                        {% endwith %}
+
+                    {% endfor %}
                 {% endfor %}
             </div>
         </main>

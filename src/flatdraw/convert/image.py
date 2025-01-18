@@ -5,6 +5,8 @@ import numpy as np
 import numpy.typing as npt
 from PIL import Image
 
+from .map import Map
+
 
 DEFAULT_CELL_PREDICATE_NAME = "cell"
 
@@ -29,7 +31,7 @@ class ImageInterpreter:
             raise FileNotFoundError(f"Image file not found: {self.image_path}")
         return self.image_path.stem
 
-    def _convert_image(self) -> npt.ArrayLike:
+    def _convert_image(self) -> Map:
         layer_r = np.zeros((self.image_height, self.image_width)).astype(np.uint16)
         layer_b = np.zeros((self.image_height, self.image_width)).astype(np.uint16)
 
@@ -40,16 +42,19 @@ class ImageInterpreter:
                 layer_b[y, x] = b
 
         layer_out = (layer_r << 8) + layer_b
-        return layer_out
+        return Map(layer_out, layer_out.shape[0], layer_out.shape[1])
 
     def _to_clingo_representation(self) -> List[str]:
         atoms = []
-        track_types = self._convert_image()
+        track_types = self._convert_image().array
         for x in range(track_types.shape[0]):
             for y in range(track_types.shape[1]):
                 track_type = track_types[x, y]
                 atoms.append(f"{self.cell_predicate_name}({x},{y},{track_type})")
         return atoms
+
+    def get_map(self) -> Map:
+        return self._convert_image()
 
     def convert(self) -> None:
         out = ""

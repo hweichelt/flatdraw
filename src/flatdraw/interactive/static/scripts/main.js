@@ -24,6 +24,10 @@ let drag_origin_x = 0;
 let drag_origin_y = 0;
 
 
+document.querySelectorAll("input[type=hidden].loaded").forEach(node => {
+    map.set(Number.parseInt(node.name), node.value)
+});
+
 document.addEventListener('keydown', event => {
     if (event.ctrlKey && event.key === 's') {
         event.preventDefault();

@@ -8,6 +8,7 @@ import numpy.typing as npt
 from PIL import Image
 
 from .track import Track
+from .map import Map
 
 NODE_PREDICATE_NAME = "cell"
 
@@ -47,6 +48,9 @@ class ClingoInterpreter:
             converted_map[y, x] = value
         self._map_data = converted_map
 
+    def get_map(self) -> Map:
+        return Map(self._map_data, self._width, self._height)
+
     @staticmethod
     @cache
     def convert_track(track: np.uint16) -> int:
@@ -65,5 +69,4 @@ class ClingoInterpreter:
                 transformed[y, x] = ClingoInterpreter.convert_track(
                     self._map_data[y][x]
                 )
-        print(transformed)
         Image.fromarray(transformed, mode="RGBA").save("output.png", "PNG")
