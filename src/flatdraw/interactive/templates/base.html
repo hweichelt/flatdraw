@@ -5,17 +5,25 @@
     <title>Title</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style/main.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style/map.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/spinners.css') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div id="save-screen">
+        <span class="loader"></span>
+        <div class="text">SAVING MAP</div>
+    </div>
     <header>
         <div class="title">Flatdraw</div>
         <nav>
             <a href="{{ url_for('index') }}">{{ icons.home }}</a>
         </nav>
+        <div id="actions">
+            <button id="save-button" class="button">Save</button>
+        </div>
     </header>
     {% block content %}
     {% endblock %}

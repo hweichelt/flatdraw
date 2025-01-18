@@ -9,10 +9,50 @@ body {
     padding: 0;
     margin: 0;
 }
+
+#save-screen{
+    display: flex;
+    flex-direction: column;
+    gap: 5rem;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,0.2);
+    backdrop-filter: saturate(0) blur(20px);
+    z-index: 5;
+    transition: 200ms;
+    opacity: 0;
+}
+
+.saving #save-screen{
+    opacity: 1;
+}
+
+#save-screen .text{
+    font-weight: bolder;
+    font-size: 1.3rem;
+    animation: text-saving 0.8s infinite linear alternate-reverse;
+}
+
+@keyframes text-saving {
+    0%{
+        opacity: 0.2;
+    }
+    100%{
+        opacity: 0.4;
+    }
+}
+
+
 header{
     border-bottom: solid 1px rgba(255,255,255,0.2);
     display: grid;
-    grid-template-columns: 12rem 1fr;
+    grid-template-columns: 15rem 1fr auto;
     height: 4rem;
 }
 header .title{
@@ -42,6 +82,14 @@ header nav a:hover{
 header nav a svg{
     fill: var(--background);
 }
+header #actions{
+    height: 100%;
+    padding: 0 1rem;
+    display: flex;
+    align-items: center;
+}
+
+
 .page{
     display: grid;
     grid-template-columns: auto 1fr;
@@ -55,6 +103,7 @@ main{
     overflow: hidden;
 }
 main .shadow{
+    pointer-events: none;
     position: absolute;
     top: 0;
     left: 0;
@@ -64,13 +113,13 @@ main .shadow{
     z-index: 2;
 }
 aside{
-    min-width: 12rem;
+    min-width: 15rem;
     border-right: solid 1px rgba(255,255,255,0.2);
 }
 
 .palette{
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     padding: 1rem;
     gap: 0.5rem;
     border-bottom: solid 1px rgba(255,255,255,0.2);
@@ -80,8 +129,6 @@ aside{
     border-bottom: none;
 }
 
-
-
 .palette .track {
     position: relative;
     background: rgba(255,255,255,0.05);
@@ -90,8 +137,8 @@ aside{
     font-size: 1rem;
     padding: 1rem;
     aspect-ratio: 1;
-    border: solid 1px rgba(255,255,255,0.2);
-    border-radius: 0.25rem;
+    border: solid 3px rgba(255,255,255,0.2);
+    border-radius: 0.5rem;
 }
 
 .palette .track > div{
@@ -122,6 +169,16 @@ aside{
     gap: 1rem;
 }
 
+button.button{
+    cursor: pointer;
+    padding: 0.3rem 1rem;
+    background: #09c;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: bolder;
+    border: solid 3px rgba(255,255,255,0.25);
+    border-radius: 0.5rem;
+}
 
 @media (prefers-color-scheme: dark) {
   body {

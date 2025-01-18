@@ -27,3 +27,13 @@ class Track:
         b = int(self.value & 0x00FF)
         c = Color(r, 0, b)
         return c
+
+    def to_rgba_32bits(self):
+        c = self.to_color()
+        r = c.r & 0xFF
+        g = c.g & 0xFF
+        b = c.b & 0xFF
+        # completely transparent if 0 else no alpha
+        a = 0 & 0xFF if c.r + c.g + c.b == 0 else 255 & 0xFF
+        value = (a << 24) | (b << 16) | (g << 8) | r
+        return value

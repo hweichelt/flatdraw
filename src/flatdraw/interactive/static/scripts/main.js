@@ -1,5 +1,6 @@
-const buttons_node = document.querySelectorAll("button.node");
+const buttons_node = document.querySelectorAll(".node-wrapper");
 const buttons_track = document.querySelectorAll(".palette .track");
+const button_save = document.getElementById("save-button");
 
 let brush = undefined;
 let brush_button = undefined;
@@ -23,6 +24,17 @@ let drag_origin_x = 0;
 let drag_origin_y = 0;
 
 
+document.addEventListener('keydown', event => {
+    if (event.ctrlKey && event.key === 's') {
+        event.preventDefault();
+        save_map();
+    }
+});
+button_save.addEventListener("click", event => {
+    event.preventDefault();
+    save_map();
+});
+
 
 const map_aspect_ratio = map_x / map_y;
 if(map_aspect_ratio >= 1){
@@ -34,6 +46,14 @@ if(map_aspect_ratio >= 1){
     map_height = main.getBoundingClientRect().height - map_offset;
     map_width = map_height * map_aspect_ratio;
 }
+if(map_height > main.getBoundingClientRect().height - map_offset) {
+    // scale to max height of main
+    const height_offset = main.getBoundingClientRect().height - map_offset;
+    const scale_adjustment = height_offset / map_height;
+    map_height = map_height * scale_adjustment;
+    map_width = map_width * scale_adjustment;
+}
+
 map_element.style.width = `${map_width}px`;
 map_element.style.height = `${map_height}px`;
 map_element.style.gridTemplateColumns = `repeat(${map_x},1fr)`;
@@ -73,6 +93,7 @@ main.addEventListener("wheel", (event) => {
     }
     map_element.style.width = `${map_width * map_scale}px`;
     map_element.style.height = `${map_height * map_scale}px`;
+    map_element.style.setProperty('--grid-enabled',(map_scale >= 1)? "1": "0");
 });
 
 buttons_track.forEach((button, i) => {
@@ -82,18 +103,19 @@ buttons_track.forEach((button, i) => {
     });
 });
 
-buttons_node.forEach((button, i) => {
-    const button_x = i % map_x;
-    const button_y = Math.floor(i / map_x);
-    button.addEventListener("click", event => {
-       event.preventDefault();
-       if(brush) {
-           set_node_value(button_x, button_y, brush);
-           update_node(button_x, button_y);
-       }
-    });
-    set_node_value(button_x, button_y, "0");
-    update_node(button_x, button_y);
+map_element.addEventListener("click", event => {
+    event.preventDefault();
+    const rect = event.target.closest(".map").getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    const node_width = rect.width / map_x;
+    const node_height = rect.height / map_y;
+    const node_x = Math.floor(x / node_width);
+    const node_y = Math.floor(y / node_height);
+   if(brush) {
+       set_node_value(node_x, node_y, brush);
+       update_node(node_x, node_y);
+   }
 });
 
 function set_node_value(x, y, value) {
@@ -106,6 +128,7 @@ function update_node(x, y) {
     const button_id = x + y * map_x;
     const button = buttons_node[button_id];
     const node_value = map.get(button_id);
+
     // button.innerHTML = node_value;
     button.className = "node"
     button.classList.add(`t-${node_value}`)
@@ -119,4 +142,32 @@ function set_brush_button(new_button){
     }
     new_button.classList.add("selected");
     brush_button = new_button;
+}
+
+function get_position_from_node_id(node_id) {
+    const x = node_id % map_x;
+    const y = Math.floor(node_id / map_x);
+    return [x, y]
+}
+
+function save_map(){
+    document.body.classList.add("saving");
+
+    const actual_tracks = [...map].filter(([k, v]) => v !== 0 );
+
+    let data = new FormData()
+    actual_tracks.forEach(track => {
+        const [x, y] = get_position_from_node_id(track[0]);
+        data.append(`${x}-${y}`, track[1]);
+    });
+    console.log(data);
+    fetch("/editor/save", {
+        "method": "POST",
+        "body": data,
+    }).then(
+        // artificial 1sec timeout
+        () => new Promise(resolve => setTimeout(resolve, 1000)).then(
+            () => {document.body.classList.remove("saving")}
+        )
+    )
 }

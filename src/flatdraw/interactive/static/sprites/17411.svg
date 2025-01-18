@@ -25,7 +25,7 @@
      inkscape:document-units="mm"
      showgrid="true"
      inkscape:zoom="8.4737935"
-     inkscape:cx="16.639537"
+     inkscape:cx="16.757548"
      inkscape:cy="27.791567"
      inkscape:window-width="2494"
      inkscape:window-height="1371"
@@ -57,11 +57,11 @@
      inkscape:groupmode="layer"
      id="layer1">
     <path
-       style="fill:none;stroke:#000000;stroke-width:1"
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-dasharray:none"
        d="M 2.7815501e-7,10 H 20"
        id="path1" />
     <path
-       style="fill:none;stroke:#000000;stroke-width:1"
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-dasharray:none"
        d="M 20,10 C 14.999999,10 10,15 10,20"
        id="path1-5"
        sodipodi:nodetypes="cc" />

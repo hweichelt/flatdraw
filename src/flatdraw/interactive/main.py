@@ -1,7 +1,11 @@
+import logging
 import os
+import sys
+import time
 from pathlib import Path
-from typing import Dict
+from typing import Dict, Tuple
 
+import numpy as np
 from flask import (
     Flask,
     render_template,
@@ -12,6 +16,8 @@ from flask import (
 )
 from markupsafe import Markup
 from werkzeug.utils import secure_filename
+
+from ..convert.clingo import ClingoInterpreter
 
 UPLOAD_FOLDER = "/media/"
 ALLOWED_EXTENSIONS = {"png", "lp"}
@@ -43,6 +49,11 @@ def icons() -> Dict[str, Markup]:
     return icon_set
 
 
+def parse_position(position_string: str) -> Tuple[int, int]:
+    x, y = position_string.split("-")
+    return int(x), int(y)
+
+
 @app.route("/")
 def index():
     return render_template("index.html", icons=icons())
@@ -67,5 +78,22 @@ def editor():
             return redirect(url_for("download_file", name=filename))
 
     return render_template(
-        "editor.html", width=40, height=20, track_types=TRACK_TYPES, icons=icons()
+        "editor.html", width=100, height=100, track_types=TRACK_TYPES, icons=icons()
     )
+
+
+@app.post("/editor/save/")
+def editor_save():
+    output_map = np.zeros((100, 100), dtype=np.uint16)
+    print("Saving Map")
+    for position_string, track in request.values.dicts[1].items():
+        x, y = parse_position(position_string)
+        output_map[y][x] = int(track)
+
+    facts = ClingoInterpreter.nd_array_to_facts(output_map)
+    with open("output.lp", "w") as file:
+        file.write(" ".join([f"{f}." for f in facts]))
+    ci = ClingoInterpreter("output.lp")
+    ci.convert()
+
+    return ""

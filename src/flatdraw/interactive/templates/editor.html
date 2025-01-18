@@ -20,9 +20,7 @@
             <input type="hidden" name="x" value="{{ width }}">
             <input type="hidden" name="y" value="{{ height }}">
                 {% for _ in range(width * height) %}
-                    <div class="node-wrapper">
-                        <button class="node"></button>
-                    </div>
+                    <div class="node-wrapper"></div>
                 {% endfor %}
             </div>
         </main>
