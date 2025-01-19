@@ -10,8 +10,6 @@ from PIL import Image
 from .track import Track
 from .map import Map
 
-NODE_PREDICATE_NAME = "cell"
-
 
 class ClingoInterpreter:
     def __init__(self, program_path: Union[str, Path]):
@@ -21,14 +19,6 @@ class ClingoInterpreter:
         self._map_data: Optional[npt.ArrayLike] = None
 
         self._parse_program()
-
-    @staticmethod
-    def nd_array_to_facts(array: npt.ArrayLike) -> Set[str]:
-        facts = set()
-        for y in range(array.shape[0]):
-            for x in range(array.shape[1]):
-                facts.add(f"{NODE_PREDICATE_NAME}({y},{x},{array[y, x]})")
-        return facts
 
     def _parse_program(self):
         ctl = clingo.Control()

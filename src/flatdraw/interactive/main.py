@@ -20,6 +20,7 @@ from werkzeug.utils import secure_filename
 
 from ..convert.clingo import ClingoInterpreter
 from ..convert.image import ImageInterpreter
+from ..convert.utils import nd_array_to_atoms
 
 UPLOAD_FOLDER = Path.home().joinpath(".flatdraw/uploads/")
 UPLOAD_FOLDER.mkdir(parents=True, exist_ok=True)
@@ -156,7 +157,7 @@ def editor_save():
         x, y = parse_position(key)
         output_map[y, x] = int(value)
 
-    facts = ClingoInterpreter.nd_array_to_facts(output_map)
+    facts = nd_array_to_atoms(output_map)
 
     temp_file_lp = None
     if export_lp:

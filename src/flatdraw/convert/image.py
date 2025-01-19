@@ -1,30 +1,21 @@
 from pathlib import Path
-from typing import Union, Set, List
+from typing import Union
 
 import numpy as np
-import numpy.typing as npt
 from PIL import Image
 
 from .map import Map
-
-
-DEFAULT_CELL_PREDICATE_NAME = "cell"
+from .utils import nd_array_to_atoms
 
 
 class ImageInterpreter:
 
-    def __init__(
-        self,
-        image_path: Union[str, Path],
-        cell_predicate_name: str = DEFAULT_CELL_PREDICATE_NAME,
-    ):
+    def __init__(self, image_path: Union[str, Path]):
         self.image_path = Path(image_path)
         self.file_name = self._get_image_file_name()
         self.image = Image.open(image_path)
         self.image_width = self.image.width
         self.image_height = self.image.height
-
-        self.cell_predicate_name = cell_predicate_name
 
     def _get_image_file_name(self) -> str:
         if not self.image_path.is_file():
@@ -44,21 +35,13 @@ class ImageInterpreter:
         layer_out = (layer_r << 8) + layer_b
         return Map(layer_out, layer_out.shape[0], layer_out.shape[1])
 
-    def _to_clingo_representation(self) -> List[str]:
-        atoms = []
-        track_types = self._convert_image().array
-        for x in range(track_types.shape[0]):
-            for y in range(track_types.shape[1]):
-                track_type = track_types[x, y]
-                atoms.append(f"{self.cell_predicate_name}({x},{y},{track_type})")
-        return atoms
-
     def get_map(self) -> Map:
         return self._convert_image()
 
     def convert(self) -> None:
         out = ""
-        atoms = self._to_clingo_representation()
+        track_type_array = self._convert_image().array
+        atoms = nd_array_to_atoms(track_type_array)
         for y in range(self.image_height):
             out += (
                 ". ".join(atoms[y * self.image_width : (y + 1) * self.image_width])
