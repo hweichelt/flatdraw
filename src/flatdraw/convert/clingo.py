@@ -28,7 +28,7 @@ class ClingoInterpreter:
         height = 0
         for a in ctl.symbolic_atoms.by_signature("cell", 2):
             pos, _ = a.symbol.arguments
-            x, y = int(str(pos.arguments[0])), int(str(pos.arguments[1]))
+            y, x = int(str(pos.arguments[0])), int(str(pos.arguments[1]))
             width = max(width, x)
             height = max(height, y)
         self._width = width + 1
@@ -36,8 +36,8 @@ class ClingoInterpreter:
         converted_map = np.zeros((self._width, self._height), dtype=np.uint16)
         for a in ctl.symbolic_atoms.by_signature("cell", 2):
             pos, value = a.symbol.arguments
-            x = int(str(pos.arguments[0]))
-            y = int(str(pos.arguments[1]))
+            y = int(str(pos.arguments[0]))
+            x = int(str(pos.arguments[1]))
             value = int(str(value))
             converted_map[y, x] = value
         self._map_data = converted_map
