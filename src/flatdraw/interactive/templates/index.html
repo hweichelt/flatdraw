@@ -10,6 +10,23 @@
             <form class="dialog" id="file-form" action="{{ url_for("editor") }}" method="POST" enctype=multipart/form-data>
                 <button type="button" class="button" onclick="document.getElementById('file').click();">Open File</button>
                 <input type="file" id="file" name="file" dirname="." accept=".png,.lp">
+                {% if recent_maps %}
+                    <div class="division">
+                        <h3>Recent Maps</h3>
+                        <div class="divider"></div>
+                    </div>
+                    <div id="recent">
+                        {% for file, path in recent_maps.items() %}
+                            <a type="button" class="button subtle icon" href="{{ url_for("open_recent", num=loop.index - 1) }}">
+                                {{ icons.file }}
+                                <div>{{ file }}</div>
+                            </a>
+                        {% endfor %}
+                        {% if recent_maps|length == 3 %}
+                            <button type="button" class="button subtle" onclick="document.getElementById('file').click();">⋮</button>
+                        {% endif %}
+                    </div>
+                {% endif %}
             </form>
             <form class="dialog" action="{{ url_for("editor") }}" method="POST">
                 <div class="split">

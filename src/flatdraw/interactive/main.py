@@ -1,8 +1,9 @@
+import json
 import os
 import subprocess
 import tempfile
 from pathlib import Path
-from typing import Dict, Tuple
+from typing import Dict, Tuple, Optional
 
 import numpy as np
 from flask import (
@@ -11,6 +12,8 @@ from flask import (
     request,
     flash,
     redirect,
+    url_for,
+    session,
 )
 from markupsafe import Markup
 from werkzeug.utils import secure_filename
@@ -20,6 +23,9 @@ from ..convert.image import ImageInterpreter
 
 UPLOAD_FOLDER = Path.home().joinpath(".flatdraw/uploads/")
 UPLOAD_FOLDER.mkdir(parents=True, exist_ok=True)
+OUTPUT_FOLDER = Path.home() / "Downloads" / "Flatdraw"
+OUTPUT_FOLDER.mkdir(parents=True, exist_ok=True)
+
 
 ALLOWED_EXTENSIONS = {"png", "lp"}
 TRACK_TYPES = [
@@ -30,7 +36,7 @@ TRACK_TYPES = [
     {20994, 16458, 2136, 6672},
     {33825, 38433, 50211, 33897, 35889, 38505, 52275},
 ]
-ICONS = {"home", "arrow_left", "folder"}
+ICONS = {"home", "arrow_left", "folder", "file"}
 
 app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
@@ -55,43 +61,74 @@ def parse_position(position_string: str) -> Tuple[int, int]:
     return int(x), int(y)
 
 
+def get_recent_maps(n: int = 3) -> Dict[str, Path]:
+    return {
+        f.name: f.resolve()
+        for f in sorted(
+            {f for f in OUTPUT_FOLDER.glob("**/*") if f.is_file()},
+            key=lambda f: f.lstat().st_mtime,
+            reverse=True,
+        )[:n]
+    }
+
+
 @app.route("/")
 def index():
-    return render_template("index.html", icons=icons(), hide_nav=True)
+    recent_maps = get_recent_maps()
+    return render_template(
+        "index.html",
+        icons=icons(),
+        hide_nav=True,
+        recent_maps=recent_maps,
+    )
 
 
-@app.post("/editor/")
+@app.route("/open/recent/<int:num>")
+def open_recent(num: int):
+    file = list(get_recent_maps().values())[num]
+    messages = json.dumps({"file": str(file)})
+    return redirect(url_for("editor", messages=messages))
+
+
+@app.route("/editor/")
 def editor():
-    if "file" in request.files:
-        file = request.files["file"]
-        # If the user does not select a file, the browser submits an
-        # empty file without a filename.
-        if file.filename == "":
-            flash("No selected file")
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
+    messages = dict(json.loads(request.args["messages"]))
+    print(messages, messages.items())
+    if "file" in request.files or "file" in messages:
+        if "file" in messages:
+            uploaded_file_path = messages["file"]
+        else:
+            file = request.files["file"]
+            # If the user does not select a file, the browser submits an
+            # empty file without a filename.
+            if file.filename == "":
+                flash("No selected file")
+                return redirect(request.url)
+            if not file or not allowed_file(file.filename):
+                flash("Not a valid file")
+                return redirect(request.url)
             filename = secure_filename(file.filename)
             uploaded_file_path = str(
                 os.path.join(app.config["UPLOAD_FOLDER"], filename)
             )
             file.save(uploaded_file_path)
 
-            if uploaded_file_path.endswith(".png"):
-                ii = ImageInterpreter(uploaded_file_path)
-                loaded_map = ii.get_map()
-            elif uploaded_file_path.endswith(".lp"):
-                ci = ClingoInterpreter(uploaded_file_path)
-                loaded_map = ci.get_map()
-            else:
-                return "ERROR: Wrong file type"
-            return render_template(
-                "editor.html",
-                width=loaded_map.width,
-                height=loaded_map.height,
-                nodes=loaded_map.get_non_empty_nodes(),
-                track_types=TRACK_TYPES,
-                icons=icons(),
-            )
+        if uploaded_file_path.endswith(".png"):
+            ii = ImageInterpreter(uploaded_file_path)
+            loaded_map = ii.get_map()
+        elif uploaded_file_path.endswith(".lp"):
+            ci = ClingoInterpreter(uploaded_file_path)
+            loaded_map = ci.get_map()
+        else:
+            return "ERROR: Wrong file type"
+        return render_template(
+            "editor.html",
+            width=loaded_map.width,
+            height=loaded_map.height,
+            nodes=loaded_map.get_non_empty_nodes(),
+            track_types=TRACK_TYPES,
+            icons=icons(),
+        )
     else:
         return render_template(
             "editor.html",
@@ -116,15 +153,13 @@ def editor_save():
         if key in ["filename", "width", "height", "export-lp", "export-png"]:
             continue
         x, y = parse_position(key)
-        output_map[y][x] = int(value)
+        output_map[y, x] = int(value)
 
     facts = ClingoInterpreter.nd_array_to_facts(output_map)
 
-    downloads_path = Path.home() / "Downloads" / "Flatdraw"
-    downloads_path.mkdir(parents=True, exist_ok=True)
     temp_file_lp = None
     if export_lp:
-        filename_lp = downloads_path / f"{filename}.lp"
+        filename_lp = OUTPUT_FOLDER / f"{filename}.lp"
     else:
         temp_file_lp = tempfile.NamedTemporaryFile(delete=False)
         filename_lp = temp_file_lp.name
@@ -133,7 +168,7 @@ def editor_save():
         file.write(" ".join([f"{f}." for f in sorted(facts)]))
     ci = ClingoInterpreter(filename_lp)
     image = ci.convert()
-    filename_png = downloads_path / f"{filename}.png"
+    filename_png = OUTPUT_FOLDER / f"{filename}.png"
     if export_png:
         image.save(filename_png, "PNG")
 
@@ -147,5 +182,5 @@ def editor_save():
 @app.route("/editor/open_output_dir/")
 def editor_open_output_dir():
     print("TEST")
-    subprocess.Popen(["xdg-open", Path.home() / "Downloads" / "Flatdraw"])
+    subprocess.Popen(["xdg-open", str(OUTPUT_FOLDER)])
     return ""
