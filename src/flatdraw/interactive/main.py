@@ -183,6 +183,5 @@ def editor_save():
 
 @app.route("/editor/open_output_dir/")
 def editor_open_output_dir():
-    print("TEST")
     subprocess.Popen(["xdg-open", str(OUTPUT_FOLDER)])
     return ""
