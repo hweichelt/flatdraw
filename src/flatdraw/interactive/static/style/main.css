@@ -193,12 +193,12 @@ aside{
     stroke: rgba(255,255,255,0.4);
     fill: rgba(255,255,255,0.4);
 }
-.button.tooltip{
+.tooltip{
     --tooltip-text: "XXXXX";
     --tooltip-width: 11rem;
     position: relative;
 }
-.button.tooltip::after{
+.tooltip::after{
     pointer-events: none;
     content: var(--tooltip-text);
     position: absolute;
@@ -217,15 +217,26 @@ aside{
     border: solid 1px var(--border-surface);
     box-shadow: 0 0 0.1rem rgba(0,0,0,0.1);
     opacity: 0;
-    transition-property: opacity, top, box-shadow;
+    transition-property: opacity, top, right, box-shadow;
     transition-duration: 200ms;
     transition-delay: 200ms;
     z-index: 5;
 }
-.button.tooltip:hover::after{
+.tooltip:hover::after{
     box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.35);
     top: calc(100% + 0.65rem);
     opacity: 1;
+}
+
+.tooltip.to-right::after {
+    transform: translate(100%, -50%);
+    left: auto;
+    right: 50%;
+}
+.tooltip.to-right:hover::after{
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.35);
+    top: 50%;
+    right: -0.65rem;
 }
 
 

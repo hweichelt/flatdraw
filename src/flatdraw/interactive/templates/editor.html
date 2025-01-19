@@ -6,7 +6,7 @@
             {% for track_cluster in track_types %}
                 <div class="palette">
                     {% for track in track_cluster %}
-                        <div class="track">
+                        <div class="track tooltip to-right" style="--tooltip-width: 3rem;--tooltip-text: '{{ track }}';">
                             <input type="hidden" value="{{ track }}">
                             <div class="t-{{ track }} t-sprite"></div>
                         </div>
