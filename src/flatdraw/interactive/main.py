@@ -90,10 +90,11 @@ def open_recent(num: int):
     return redirect(url_for("editor", messages=messages))
 
 
-@app.route("/editor/")
+@app.route("/editor/", methods=["GET", "POST"])
 def editor():
-    messages = dict(json.loads(request.args["messages"]))
-    print(messages, messages.items())
+    messages = (
+        dict(json.loads(request.args["messages"])) if "messages" in request.args else {}
+    )
     if "file" in request.files or "file" in messages:
         if "file" in messages:
             uploaded_file_path = messages["file"]
