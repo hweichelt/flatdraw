@@ -96,10 +96,9 @@ form input[type=number]{
     position: absolute;
     top: 50%;
     left: 50%;
-    height: 25rem;
-    width: 25rem;
-    background: var(--primary);
-    border-radius: 50%;
+    height: 30vw;
+    width: 30vw;
+    background: radial-gradient(circle closest-side, var(--primary) 10%, transparent 80%);
     filter: blur(100px);
     opacity: 0.5;
     transform: translate(-40%, -40%);
