@@ -39,9 +39,7 @@ def main():
         type=int,
         help="Track type identifier of the flatland track to be converted",
     )
-    interactive_parser = subparsers.add_parser(
-        "interactive", help="Run an interactive session"
-    )
+    interactive_parser = subparsers.add_parser("ui", help="Run an interactive session")
     args = parser.parse_args()
 
     if args.subparser == "convert":
@@ -50,7 +48,7 @@ def main():
     elif args.subparser == "color":
         t = Track(args.track)
         print(t.to_color().to_hex())
-    elif args.subparser == "interactive":
+    elif args.subparser == "ui":
         app.run(debug=True)
     else:
         print(FLATDRAW_FONTART)
