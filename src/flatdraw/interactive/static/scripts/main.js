@@ -22,6 +22,7 @@ let map_shift_old_y = 0;
 let dragging = false;
 let drag_origin_x = 0;
 let drag_origin_y = 0;
+let pressing_mouse_0 = false;
 
 const form_save = document.getElementById("save-form");
 
@@ -80,7 +81,10 @@ map_element.style.gridTemplateColumns = `repeat(${map_x},1fr)`;
 map_element.style.gridTemplateRows = `repeat(${map_y},1fr)`;
 
 main.addEventListener("mousedown", event => {
-    if(event.button === 1){
+    event.preventDefault();
+    if (event.button === 0) {
+        pressing_mouse_0 = true
+    } else if(event.button === 1){
         drag_origin_x = event.screenX;
         drag_origin_y = event.screenY;
         dragging = true;
@@ -98,7 +102,9 @@ main.addEventListener("mousemove", event => {
     }
 })
 main.addEventListener("mouseup", event => {
-    if(event.button === 1) {
+    if (event.button === 0) {
+        pressing_mouse_0 = false
+    } else if(event.button === 1) {
         map_shift_old_x = map_shift_old_x + map_shift_x;
         map_shift_old_y = map_shift_old_y + map_shift_y;
         dragging = false;
@@ -125,18 +131,28 @@ buttons_track.forEach((button, i) => {
 
 map_element.addEventListener("click", event => {
     event.preventDefault();
-    const rect = event.target.closest(".map").getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-    const node_width = rect.width / map_x;
-    const node_height = rect.height / map_y;
-    const node_x = Math.floor(x / node_width);
-    const node_y = Math.floor(y / node_height);
-   if(brush) {
-       set_node_value(node_x, node_y, brush);
-       update_node(node_x, node_y);
-   }
+    draw(event.target.closest(".map"), event.clientX, event.clientY)
 });
+map_element.addEventListener("mousemove", event => {
+    event.preventDefault();
+    if(pressing_mouse_0){
+        draw(event.target.closest(".map"), event.clientX, event.clientY)
+    }
+})
+
+function draw(map, client_x, client_y,){
+    const rect = map.getBoundingClientRect();
+        const x = client_x - rect.left;
+        const y = client_y - rect.top;
+        const node_width = rect.width / map_x;
+        const node_height = rect.height / map_y;
+        const node_x = Math.floor(x / node_width);
+        const node_y = Math.floor(y / node_height);
+       if(brush) {
+           set_node_value(node_x, node_y, brush);
+           update_node(node_x, node_y);
+        }
+}
 
 function set_node_value(x, y, value) {
     const button_id = x + y * map_x;
