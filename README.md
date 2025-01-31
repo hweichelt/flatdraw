@@ -17,6 +17,12 @@ pip install .
 ## Running
 
 ```bash
+flatdraw ui
+```
+
+### Help
+
+```bash
 flatdraw --help
 ```
 
