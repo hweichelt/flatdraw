@@ -4,7 +4,7 @@ import subprocess
 import tempfile
 import sys
 from pathlib import Path
-from typing import Dict, Tuple, Optional
+from typing import Dict, Tuple
 
 import numpy as np
 from flask import (
@@ -14,7 +14,6 @@ from flask import (
     flash,
     redirect,
     url_for,
-    session,
 )
 from markupsafe import Markup
 from werkzeug.utils import secure_filename
@@ -58,9 +57,10 @@ def icons() -> Dict[str, Markup]:
     return icon_set
 
 
-def parse_position(position_string: str) -> Tuple[int, int]:
-    x, y = position_string.split("-")
-    return int(x), int(y)
+def compute_position(position_id: int, width: int) -> Tuple[int, int]:
+    x = position_id % width
+    y = position_id // width
+    return x, y
 
 
 def get_recent_maps(n: int = 3) -> Dict[str, Path]:
@@ -152,10 +152,8 @@ def editor_save():
     export_png = bool(int(request.form.get("export-png")))
     filename = request.form.get("filename")
     output_map = np.zeros((height, width), dtype=np.uint16)
-    for key, value in request.form.items():
-        if key in ["filename", "width", "height", "export-lp", "export-png"]:
-            continue
-        x, y = parse_position(key)
+    for key, value in json.loads(request.form.get("map")).items():
+        x, y = compute_position(int(key), width)
         output_map[y, x] = int(value)
     np.set_printoptions(threshold=sys.maxsize)
     facts = nd_array_to_atoms(output_map)

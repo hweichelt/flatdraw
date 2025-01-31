@@ -199,10 +199,7 @@ function save_map(){
     const actual_tracks = [...map].filter(([k, v]) => v !== 0 );
 
     let data = new FormData()
-    actual_tracks.forEach(track => {
-        const [x, y] = get_position_from_node_id(track[0]);
-        data.append(`${x}-${y}`, track[1]);
-    });
+    data.append("map", JSON.stringify(Object.fromEntries(map)));
     data.append("filename", form_save.querySelector("input[name=filename]").value);
     data.append("export-lp", `${+ form_save.querySelector("input[name=export-lp]").checked}`);
     data.append("export-png", `${+ form_save.querySelector("input[name=export-png]").checked}`);
