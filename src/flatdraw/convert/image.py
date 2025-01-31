@@ -33,7 +33,7 @@ class ImageInterpreter:
                 layer_b[y, x] = b
 
         layer_out = (layer_r << 8) + layer_b
-        return Map(layer_out, layer_out.shape[0], layer_out.shape[1])
+        return Map(layer_out, width=layer_out.shape[1], height=layer_out.shape[0])
 
     def get_map(self) -> Map:
         return self._convert_image()
