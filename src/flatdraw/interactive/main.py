@@ -2,6 +2,7 @@ import json
 import os
 import subprocess
 import tempfile
+import sys
 from pathlib import Path
 from typing import Dict, Tuple, Optional
 
@@ -150,13 +151,13 @@ def editor_save():
     export_lp = bool(int(request.form.get("export-lp")))
     export_png = bool(int(request.form.get("export-png")))
     filename = request.form.get("filename")
-    output_map = np.zeros((width, height), dtype=np.uint16)
+    output_map = np.zeros((height, width), dtype=np.uint16)
     for key, value in request.form.items():
         if key in ["filename", "width", "height", "export-lp", "export-png"]:
             continue
         x, y = parse_position(key)
         output_map[y, x] = int(value)
-
+    np.set_printoptions(threshold=sys.maxsize)
     facts = nd_array_to_atoms(output_map)
 
     temp_file_lp = None

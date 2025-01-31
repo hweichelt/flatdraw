@@ -33,7 +33,7 @@ class ClingoInterpreter:
             height = max(height, y)
         self._width = width + 1
         self._height = height + 1
-        converted_map = np.zeros((self._width, self._height), dtype=np.uint16)
+        converted_map = np.zeros((self._height, self._width), dtype=np.uint16)
         for a in ctl.symbolic_atoms.by_signature("cell", 2):
             pos, value = a.symbol.arguments
             y = int(str(pos.arguments[0]))
@@ -56,7 +56,7 @@ class ClingoInterpreter:
     def convert(self) -> Image:
         if self._map_data is None:
             raise ValueError("Map is not parsed")
-        transformed = np.zeros((self._width, self._height), dtype=np.uint32)
+        transformed = np.zeros((self._height, self._width), dtype=np.uint32)
         for y in range(self._height):
             for x in range(self._width):
                 transformed[y, x] = ClingoInterpreter.convert_track(
