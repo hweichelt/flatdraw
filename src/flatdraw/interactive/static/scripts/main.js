@@ -23,6 +23,7 @@ let dragging = false;
 let drag_origin_x = 0;
 let drag_origin_y = 0;
 let pressing_mouse_0 = false;
+let draw_mode = "tracks";
 
 const form_save = document.getElementById("save-form");
 
@@ -56,6 +57,7 @@ form_save.addEventListener("submit", event => {
     save_map();
 });
 
+document.getElementById("add-train-button").addEventListener("click", event => {set_draw_mode("train")})
 
 const map_aspect_ratio = map_x / map_y;
 if(map_aspect_ratio >= 1){
@@ -131,12 +133,16 @@ buttons_track.forEach((button, i) => {
 
 map_element.addEventListener("click", event => {
     event.preventDefault();
-    draw(event.target.closest(".map"), event.clientX, event.clientY)
+    if(draw_mode === "tracks"){
+        draw(event.target.closest(".map"), event.clientX, event.clientY)
+    }
 });
 map_element.addEventListener("mousemove", event => {
     event.preventDefault();
     if(pressing_mouse_0){
-        draw(event.target.closest(".map"), event.clientX, event.clientY)
+        if(draw_mode === "tracks") {
+            draw(event.target.closest(".map"), event.clientX, event.clientY)
+        }
     }
 })
 
@@ -180,10 +186,10 @@ function set_brush_button(new_button){
     brush_button = new_button;
 }
 
-function get_position_from_node_id(node_id) {
-    const x = node_id % map_x;
-    const y = Math.floor(node_id / map_x);
-    return [x, y]
+function set_draw_mode(mode){
+    draw_mode = mode;
+    main.className = ""
+    main.classList.add(`draw-mode-${mode}`)
 }
 
 function update_save_button() {

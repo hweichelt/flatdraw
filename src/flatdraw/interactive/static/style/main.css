@@ -109,6 +109,41 @@ main .shadow{
     box-shadow: inset 0 0 3rem rgba(0,0,0,0.5);
     z-index: 2;
 }
+main::before{
+    pointer-events: none;
+    content: " ";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: solid 3px transparent;
+    z-index: 5;
+    transition-property: border-color;
+    transition-duration: 200ms;
+}
+main::after {
+    pointer-events: none;
+    content: "Place Train";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    padding: 0.5rem 1rem;
+    border-bottom-right-radius: 0.5rem;
+    background: var(--primary);
+    font-weight: bolder;
+    z-index: 5;
+    opacity: 0;
+    transition-property: opacity;
+    transition-duration: 200ms;
+}
+main.draw-mode-train::before{
+    border-color: var(--primary);
+}
+main.draw-mode-train::after{
+    opacity: 1;
+}
+
 aside{
     min-width: 15rem;
     border-right: solid 1px rgba(255,255,255,0.2);

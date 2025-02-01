@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/page/editor.css') }}">
+{% endblock %}
+
 {% block content %}
     <div class="page">
         <aside>
@@ -13,6 +17,9 @@
                     {% endfor %}
                 </div>
             {% endfor %}
+            <div id="train-controls">
+                <button id="add-train-button" class="button">Add Train</button>
+            </div>
         </aside>
         <main>
             <div class="shadow"></div>
