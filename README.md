@@ -2,6 +2,8 @@
 
 > Draw your flatland environments by hand
 
+![Flatdraw UI Example](resources/flatdraw.png)
+
 ## Installation
 
 ### From PyPi
